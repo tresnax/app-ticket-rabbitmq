@@ -1,0 +1,31 @@
+version: '3'
+networks:
+  rabbitmq-net:
+    external: true
+
+services:
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    container_name: rabbitmq
+    volumes:
+      - ./rabbitmq-data:/var/lib/rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: "devops"
+      RABBITMQ_DEFAULT_PASS: "tahubulat"
+    networks:
+      - rabbitmq-net
+
+  app-ticket:
+    image: ticket-app:latest
+    container_name: app-ticket
+    depends_on:
+      - rabbitmq
+    ports:
+      - 300:3000
+    networks:
+      - rabbitmq-net
+
+
